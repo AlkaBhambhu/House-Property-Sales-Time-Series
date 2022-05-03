@@ -4,7 +4,7 @@ USE sales;
 
 DROP TABLE IF EXISTS property_sales;
 CREATE TABLE property_sales(
-	datesold DATETIME ,
+    datesold DATETIME ,
     postcode CHAR(4),
     price INT,
     propertyType VARCHAR(6),
@@ -20,7 +20,7 @@ SELECT MIN(datesold),MAX(datesold), MIN(price), MAX(price), AVG(price)
 FROM property_sales;
 
 SELECT COUNT(DISTINCT datesold) AS number_of_days,
-	   COUNT(DISTINCT postcode) AS number_of_postcodes, 
+       COUNT(DISTINCT postcode) AS number_of_postcodes, 
        COUNT(DISTINCT propertyType) AS property_type, 
        COUNT(DISTINCT bedrooms) AS distinct_number_of_rooms
 FROM property_Sales;
@@ -39,28 +39,28 @@ LIMIT 10;
 
 -- Number of sales per year per property type
 SELECT YEAR(datesold) AS 'Year', 
-	   SUM(CASE WHEN propertyType = 'house' THEN 1 ELSE 0 END) AS House_sold,
+       SUM(CASE WHEN propertyType = 'house' THEN 1 ELSE 0 END) AS House_sold,
        SUM(CASE WHEN propertyType = 'unit' THEN 1 ELSE 0 END ) AS Unit_sold
 FROM property_Sales
 GROUP BY Year;
 
 -- Average price per year per property type
 SELECT YEAR(datesold) AS 'Year', 
-	   ROUND(AVG(CASE WHEN propertyType = 'house' THEN price ELSE null END)) AS avg_price_House_sold,
+       ROUND(AVG(CASE WHEN propertyType = 'house' THEN price ELSE null END)) AS avg_price_House_sold,
        ROUND(AVG(CASE WHEN propertyType = 'unit' THEN price ELSE null END )) AS avg_price_Unit_sold
 FROM property_Sales
 GROUP BY Year;
 
 -- Average price of property per bedroom
 SELECT YEAR(datesold) AS 'Year', 
-	   ROUND(AVG(CASE WHEN propertyType = 'house' THEN price/bedrooms ELSE null END)) AS avg_price_House_sold,
+       ROUND(AVG(CASE WHEN propertyType = 'house' THEN price/bedrooms ELSE null END)) AS avg_price_House_sold,
        ROUND(AVG(CASE WHEN propertyType = 'unit' THEN price/bedrooms ELSE null END )) AS avg_price_Unit_sold
 FROM property_Sales
 GROUP BY Year;
 
 -- Combine them all
 SELECT YEAR(datesold) AS 'Year', 
-	   SUM(CASE WHEN propertyType = 'house' THEN 1 ELSE 0 END) AS House_sold,
+	SUM(CASE WHEN propertyType = 'house' THEN 1 ELSE 0 END) AS House_sold,
        SUM(CASE WHEN propertyType = 'unit' THEN 1 ELSE 0 END ) AS Unit_sold,
        ROUND(AVG(CASE WHEN propertyType = 'house' THEN price ELSE null END)) AS avg_price_House_sold,
        ROUND(AVG(CASE WHEN propertyType = 'unit' THEN price ELSE null END )) AS avg_price_Unit_sold,
@@ -75,7 +75,7 @@ WITH CTE AS (
 	FROM property_Sales
 	GROUP BY YEAR(datesold))
 SELECT Year, num_of_sales, sale_amount,
-		ROUND(100 *(sale_amount - LAG(sale_amount) OVER (ORDER BY Year))/LAG(sale_amount) OVER (ORDER BY Year),1) AS YOY_growth
+	ROUND(100 *(sale_amount - LAG(sale_amount) OVER (ORDER BY Year))/LAG(sale_amount) OVER (ORDER BY Year),1) AS YOY_growth
 FROM CTE;
 /** number of sales doubled in 2009 and hence forth increased continously before decreasing in 2018 and a major drop in 2019 **/
 
@@ -124,3 +124,4 @@ FROM property_sales
 GROUP BY propertyType,bedrooms
 ORDER BY propertyType,bedrooms;
 /** Houses with 4 bedrooms are sold more and at good price, while units with 2 bedrooms are more popular **/
+
